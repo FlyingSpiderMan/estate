@@ -20,7 +20,8 @@
         http://www.springframework.org/schema/p
         http://www.springframework.org/schema/p/spring-p.xsd">
 
-    <context:component-scan base-package="com.kgc.estate.service"></context:component-scan>
+    <context:component-scan base-package="com.kgc.spring.service"></context:component-scan>
+
     <context:property-placeholder location="classpath:database.properties"></context:property-placeholder>
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="username" value="${user}"></property>
@@ -40,7 +41,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.kgc.estate.mapper"></property>
+        <property name="basePackage" value="com.kgc.spring.mapper"></property>
     </bean>
 
     <!--配置事务-->
@@ -63,7 +64,7 @@
     <!--设置切点-->
     <!--将增强函数切入-->
     <aop:config>
-        <aop:pointcut id="serviceMethod" expression="execution(* com.kgc.pet.service..*.*(..))"></aop:pointcut>
+        <aop:pointcut id="serviceMethod" expression="execution(* com.kgc.spring.service..*.*(..))"></aop:pointcut>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod"></aop:advisor>
     </aop:config>
 </beans>
