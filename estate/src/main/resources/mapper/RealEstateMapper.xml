@@ -9,6 +9,9 @@
     <result column="house_type" property="houseType" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="INTEGER" />
     <result column="build_time" property="buildTime" jdbcType="DATE" />
+
+    <collection property="users" select="com.kgc.spring.UserMapper.selectByCardid" column="card_id"></collection>
+
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
