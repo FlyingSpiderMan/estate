@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/p
+        http://www.springframework.org/schema/p/spring-p.xsd">
+
+    <context:component-scan base-package="com.kgc.estate.service"></context:component-scan>
+    <context:property-placeholder location="classpath:database.properties"></context:property-placeholder>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${user}"></property>
+        <property name="password" value="${password}"></property>
+        <property name="driverClassName" value="${driver}"></property>
+        <property name="url" value="${url}"></property>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.kgc.estate.mapper"></property>
+    </bean>
+
+    <!--配置事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--增强函数-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="search*" propagation="SUPPORTS"/>
+            <tx:method name="find*" propagation="SUPPORTS"/>
+            <tx:method name="select*" propagation="SUPPORTS"/>
+            <tx:method name="get*" propagation="SUPPORTS"/>
+            <tx:method name="count*" propagation="SUPPORTS"/>
+            <tx:method name="*" propagation="REQUIRED" timeout="3" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!--设置切点-->
+    <!--将增强函数切入-->
+    <aop:config>
+        <aop:pointcut id="serviceMethod" expression="execution(* com.kgc.pet.service..*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod"></aop:advisor>
+    </aop:config>
+</beans>
