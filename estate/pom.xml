@@ -145,12 +145,6 @@
       <artifactId>mybatis</artifactId>
       <version>3.4.1</version>
     </dependency>
-    <!-- google图片验证码 -->
-    <dependency>
-      <groupId>com.google.code</groupId>
-      <artifactId>kaptcha</artifactId>
-      <version>2.3.2</version>
-    </dependency>
     <!-- log4j -->
     <dependency>
       <groupId>log4j</groupId>
